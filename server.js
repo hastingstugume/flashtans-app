@@ -5,9 +5,9 @@ const path = require('path');
 require('dotenv').config();
 
 const { initDatabase } = require('./config/database');
-const Product = require('./models/Product');
-const Customer = require('./models/Customer');
-const Order = require('./models/Order');
+const Product = require('./models/product');
+const Customer = require('./models/customer');
+const Order = require('./models/order');
 
 const app = express();
 const PORT = process.env.PORT || 3000;

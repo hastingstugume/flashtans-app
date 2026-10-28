@@ -1,32 +1,36 @@
-version: '3.8'
-
 services:
   mysql:
-   image: mysql:8.0
-   restart: always
-   environment:
-     MYSQL_ROOT_PASSWORD: 
-     MYSQL_DATABASE:
-    ports:
-      
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
+      MYSQL_DATABASE: ${DB_NAME:-flash_tans_db}
     volumes:
-      
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - mysql --host=127.0.0.1 --user=root --password="$${MYSQL_ROOT_PASSWORD}" --database="$${MYSQL_DATABASE}" --execute="SELECT 1"
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
 
   app:
-   build: .
-   depends_on:
-      - mysql
+    build: .
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
     environment:
-    DB_HOST: 
-    DB_USER: 
-    DB_PASSWORD: 
-    DB_NAME: 
-    DB_PORT: 
-    	PORT: 
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
+      DB_NAME: ${DB_NAME:-flash_tans_db}
+      DB_PORT: "3306"
+      PORT: "3000"
     ports:
-      
- volumes:
-      
+      - "${PORT:-3000}:3000"
 
 volumes:
   mysql_data:

@@ -10,7 +10,7 @@ RUN npm install
 COPY . .
 
 # Expose port
-EXPOSE 
+EXPOSE 3000
 
-# Wait for MySQL and start the application
+# Compose waits for MySQL before starting the application
 CMD ["npm", "start"]
