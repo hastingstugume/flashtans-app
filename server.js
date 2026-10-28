@@ -168,6 +168,6 @@ app.use((req, res) => {
   res.status(404).render('error', { message: 'Page not found' });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Flash Tans server running on port ${PORT}`);
 });
